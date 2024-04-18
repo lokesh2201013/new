@@ -1,21 +1,36 @@
 class Solution {
 public:
-    int islandPerimeter(vector<vector<int>>& g) {
-        int perimeter = 0;
+    int islandPerimeter(vector<vector<int>>& g) 
+    {
+        int c = 0;
+        int rows = g.size();
+        int cols = g[0].size();
         
-        for(int i = 0; i < g.size(); i++) {
-            for(int j = 0; j <g[0].size() ;j++) {
-                if(g[i][j] == 1) {
-                    perimeter += 4; 
-            
-                    if(j > 0 && g[i][j - 1] == 1)
-                        perimeter -= 2;
-      
-                    if(i > 0 && g[i - 1][j] == 1)
-                        perimeter -= 2;
+        for(int i = 0; i < rows; i++)
+        {
+            for(int j = 0; j < cols; j++)
+            {
+                if(g[i][j] == 1)
+                {
+                    if(j == 0 || g[i][j - 1] == 0)
+                    {
+                        c++;
+                    }
+                    if(i == 0 || g[i - 1][j] == 0)
+                    {
+                        c++;
+                    }
+                    if(j == cols - 1 || g[i][j + 1] == 0)
+                    {
+                        c++;
+                    }
+                    if(i == rows - 1 || g[i + 1][j] == 0)
+                    {
+                        c++;
+                    }
                 }
             }
-        }
-        return perimeter;
+        } 
+        return c;
     }
 };
