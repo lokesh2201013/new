@@ -1,16 +1,21 @@
 class Solution {
 public:
-    int rob(vector<int>& n) {
-    if(n.empty()) return 0;
-    int s=n.size();
-      vector<int> dp(s, 0);
-    if(s==1) return n[0];
-    dp[0]=n[0];
-    dp[1]=max(n[0],n[1]);
-    for(int i=2 ; i<s ; i++)
-    {
-        dp[i]=max(dp[i-1],dp[i-2]+n[i]);
+    int give(vector<int>& n, vector<int>& dp, int i) {
+        if (i < 0) return 0;
+        if (i == 0) return n[0];
+        if (dp[i] != -1) return dp[i];
+        
+        int robCurrent = n[i] + give(n, dp, i - 2);
+        int skipCurrent = give(n, dp, i - 1);
+        
+        return dp[i] = max(robCurrent, skipCurrent);
     }
-    return dp[s-1];
+
+    int rob(vector<int>& n) {
+        if (n.size() == 0) return 0;
+        if (n.size() == 1) return n[0];
+        
+        vector<int> dp(n.size(), -1);
+        return give(n, dp, n.size() - 1);
     }
 };
