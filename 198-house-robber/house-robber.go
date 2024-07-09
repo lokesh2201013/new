@@ -1,19 +1,37 @@
-func give(i int,n []int,dp []int)int{
-    if i < 0 {
-       return 0
+
+func max(a, b int) int {
+    if a > b {
+        return a
     }
-    if dp[i] != -1{
+    return b
+}
+
+func give(n []int, dp []int, i int) int {
+    if i < 0 {
+        return 0
+    }
+    if i == 0 {
+        return n[0]
+    }
+    if dp[i] != -1 {
         return dp[i]
     }
-    rob:=n[i] + give(i-2,n,dp)
-    notrob := give(i-1,n,dp)
-    dp[i]=max(rob,notrob)
+    robCurrent := n[i] + give(n, dp, i-2)
+    skipCurrent := give(n, dp, i-1)
+    dp[i] = max(robCurrent, skipCurrent)
     return dp[i]
 }
+
 func rob(n []int) int {
-    dp:=make([]int ,len(n))
-    for i:= range dp{
-        dp[i]=-1
+    if len(n) == 0 {
+        return 0
     }
-    return give(len(n)-1,n,dp)
+    if len(n) == 1 {
+        return n[0]
+    }
+    dp := make([]int, len(n))
+    for i := range dp {
+        dp[i] = -1
+    }
+    return give(n, dp, len(n)-1)
 }
