@@ -1,34 +1,34 @@
 class Solution {
-private:
-    int give(vector<int>& n, int i, vector<int>& dp) {
-        if (i < 0) {
-            return 0;
-        }
-        if (dp[i] != -1) return dp[i];
-
-        int include = n[i] + give(n, i - 2, dp);
-        int exclude = give(n, i - 1, dp);
-
-        return dp[i] = max(include, exclude);
-    }
-
-    int robLinear(vector<int>& n) {
-        int size = n.size();
-        vector<int> dp(size, -1);
-        return give(n, size - 1, dp);
-    }
-
 public:
-    int rob(vector<int>& nums) {
-        int size = nums.size();
-        if (size == 1) return nums[0];
-
-        vector<int> t1, t2;
-        for (int i = 0; i < size; i++) {
-            if (i != 0) t1.push_back(nums[i]); 
-            if (i != size - 1) t2.push_back(nums[i]);
+    int robHelper(vector<int>& nums, int start, int end) {
+        int n = end - start + 1;
+        if (n <= 0) return 0;
+        if (n == 1) return nums[start];
+        
+        vector<int> dp(n, 0);
+        
+        dp[0] = nums[start];
+        dp[1] = max(nums[start], nums[start + 1]);
+        
+        for (int i = 2; i < n; ++i) {
+            dp[i] = max(dp[i-1], nums[start + i] + dp[i-2]);
         }
+        
+        return dp[n-1];
+    }
+    
+    int rob(vector<int>& nums) {
+        if (nums.empty()) return 0;
+        
+        int n = nums.size();
+        
+        if (n == 1) return nums[0];
+        
+        int excludeFirst = robHelper(nums, 1, n - 1);
+        
 
-        return max(robLinear(t1), robLinear(t2));
+        int excludeLast = robHelper(nums, 0, n - 2);
+        
+        return max(excludeFirst, excludeLast);
     }
 };
