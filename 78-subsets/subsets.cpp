@@ -1,26 +1,22 @@
 class Solution {
 public:
-    void generateSubsets(int i, vector<int>& d, vector<int>& n, vector<vector<int>>& result) {
-        if (i >= n.size()) {
-            result.push_back(d);
+    void give(vector<vector<int>>& a, vector<int>& n, vector<int>& p, int i) {
+        if (i == n.size()) {
+            a.push_back(p);
             return;
         }
         
-        // Include the current element
-        d.push_back(n[i]);
-        generateSubsets(i + 1, d, n, result);
-        d.pop_back(); // Backtrack
-        
-        // Exclude the current element
-        generateSubsets(i + 1, d, n, result);
+        p.push_back(n[i]);
+        give(a, n, p, i + 1);
+     
+        p.pop_back();
+        give(a, n, p, i + 1);
     }
     
     vector<vector<int>> subsets(vector<int>& n) {
-        vector<vector<int>> result;
-        vector<int> d; // Current subset
-        
-        generateSubsets(0, d, n, result);
-        
-        return result;
+        vector<vector<int>> a;
+        vector<int> p;
+        give(a, n, p, 0);
+        return a;
     }
 };
