@@ -1,37 +1,47 @@
 class Solution {
 public:
-    void dfs(int n, vector<vector<int>>& adj, vector<int>& visited) {
-        visited[n] = 1;
-        for (auto it : adj[n]) {
-            if (!visited[it]) {
-                dfs(it, adj, visited);
-            }
-        }
-    }
-
-    int findCircleNum(vector<vector<int>>& c) {
-        int n = c.size();
-        vector<vector<int>> adj(n);
-        
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                if (c[i][j] == 1 && i != j) {
-                    adj[i].push_back(j);
-                    adj[j].push_back(i);
+    int findCircleNum(vector<vector<int>>& is) {
+        vector<vector<int>> a(is.size());
+        int p = 1;
+        for (int i = 0; i < is.size(); i++) {
+            for (int j = 0; j < is[0].size(); j++) { 
+                if (is[i][j] == 1) {
+                    a[i].push_back(j);
                 }
             }
         }
 
-        vector<int> visited(n, 0);
-        int cnt = 0;
+        vector<int> vis(is.size(), 0);
+        queue<int> q;
+        bool com = false;
+        q.push(0);
+        vis[0] = 1; 
 
-        for (int i = 0; i < n; i++) {
-            if (!visited[i]) {
-                cnt++;
-                dfs(i, adj, visited);
+        while (!com) {
+            while (!q.empty()) {
+                int node = q.front();
+                q.pop();
+
+                for (int i : a[node]) {
+                    if (!vis[i]) {
+                        q.push(i);
+                        vis[i] = 1;
+                    }
+                }
+            }
+
+            com = true; 
+            for (int i = 0; i < vis.size(); i++) {
+                if (!vis[i]) {
+                    p++;
+                    q.push(i);
+                    vis[i] = 1;  
+                    com = false; 
+                    break;
+                }
             }
         }
 
-        return cnt;
+        return p;
     }
 };
