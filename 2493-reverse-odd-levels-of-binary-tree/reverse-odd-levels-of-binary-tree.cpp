@@ -11,61 +11,38 @@
  */
 class Solution {
 public:
-    vector<vector<int>> bfs(TreeNode* r) {
-        vector<vector<int>> re;
-        if (!r) return re;
-        
-        queue<TreeNode*> q;
-        q.push(r);
-        while (!q.empty()) {
-            int s = q.size();
-            vector<int> cl;
-            for (int i = 0; i < s; i++) {
-                TreeNode* n = q.front();
-                q.pop();
-                cl.push_back(n->val);
-                if (n->left) q.push(n->left);
-                if (n->right) q.push(n->right);
-            }
-            re.push_back(cl);
-        }
-        return re;
-    }
+    TreeNode* reverseOddLevels(TreeNode* root) {
+        if (!root) return nullptr;
 
-    TreeNode* buildTreeFromLevels(const vector<vector<int>>& re) {
-        if (re.empty()) return nullptr;
-
-      
-        TreeNode* root = new TreeNode(re[0][0]);
         queue<TreeNode*> q;
         q.push(root);
 
-        int level = 1; 
-        while (!q.empty() && level < re.size()) {
-            int s = q.size();
-            for (int i = 0; i < s; i++) {
-                TreeNode* curr = q.front();
-                q.pop();
-                if (2 * i < re[level].size()) {
-                    curr->left = new TreeNode(re[level][2 * i]);
-                    q.push(curr->left);
-                }
+        bool reverseLevel = false;
+        while (!q.empty()) {
+            int size = q.size();
+            vector<TreeNode*> currentLevel;
 
-                if (2 * i + 1 < re[level].size()) {
-                    curr->right = new TreeNode(re[level][2 * i + 1]);
-                    q.push(curr->right);
+            for (int i = 0; i < size; i++) {
+                TreeNode* node = q.front();
+                q.pop();
+                currentLevel.push_back(node);
+
+                if (node->left) q.push(node->left);
+                if (node->right) q.push(node->right);
+            }
+
+            if (reverseLevel) {
+                int left = 0, right = currentLevel.size() - 1;
+                while (left < right) {
+                    swap(currentLevel[left]->val, currentLevel[right]->val);
+                    left++;
+                    right--;
                 }
             }
-            level++;
-        }
-        return root;
-    }
-    TreeNode* reverseOddLevels(TreeNode* r) {
-        vector<vector<int>> re = bfs(r);
 
-        for (int i = 0; i < re.size(); i++) {
-            if (i % 2 != 0) reverse(re[i].begin(), re[i].end());
+            reverseLevel = !reverseLevel;
         }
-        return buildTreeFromLevels(re);
+
+        return root;
     }
 };
