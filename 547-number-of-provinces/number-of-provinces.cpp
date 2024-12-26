@@ -1,47 +1,32 @@
 class Solution {
 public:
+    void dfs(vector<vector<int>>& a, vector<bool>& vis, int i) {
+        vis[i] = true;
+        for (int neighbor : a[i]) { 
+            if (!vis[neighbor]) {
+                dfs(a, vis, neighbor);
+            }
+        }
+    }
+
     int findCircleNum(vector<vector<int>>& is) {
-        vector<vector<int>> a(is.size());
-        int p = 1;
-        for (int i = 0; i < is.size(); i++) {
-            for (int j = 0; j < is[0].size(); j++) { 
+        int n = is.size();
+        vector<vector<int>> a(n); 
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
                 if (is[i][j] == 1) {
                     a[i].push_back(j);
                 }
             }
         }
-
-        vector<int> vis(is.size(), 0);
-        queue<int> q;
-        bool com = false;
-        q.push(0);
-        vis[0] = 1; 
-
-        while (!com) {
-            while (!q.empty()) {
-                int node = q.front();
-                q.pop();
-
-                for (int i : a[node]) {
-                    if (!vis[i]) {
-                        q.push(i);
-                        vis[i] = 1;
-                    }
-                }
-            }
-
-            com = true; 
-            for (int i = 0; i < vis.size(); i++) {
-                if (!vis[i]) {
-                    p++;
-                    q.push(i);
-                    vis[i] = 1;  
-                    com = false; 
-                    break;
-                }
+        int c = 0;
+        vector<bool> vis(n, false);
+        for (int i = 0; i < n; i++) {
+            if (!vis[i]) {
+                dfs(a, vis, i);
+                c++;
             }
         }
-
-        return p;
+        return c;
     }
 };
