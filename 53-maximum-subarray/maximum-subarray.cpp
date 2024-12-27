@@ -1,18 +1,12 @@
 class Solution {
 public:
     int maxSubArray(vector<int>& n) {
-        if (n.empty()) {
-            return 0;  // Edge case: empty array
+        int m=INT_MIN,s=0;
+        for(int i=0 ; i<n.size();i++){
+            s+=n[i];
+            m=max(m,s);
+            if(s<0)s=0;
         }
-
-        int c = n[0];  
-        int m = n[0];  
-
-        for (int i = 1; i < n.size(); ++i) {
-            c = max(n[i], c + n[i]);
-            m = max(m, c);
-        }
-
         return m;
     }
 };
