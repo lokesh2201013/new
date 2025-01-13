@@ -1,22 +1,19 @@
 class Solution {
 public:
-    void give(vector<vector<int>>& a, vector<int>& n, vector<int>& p, int i) {
-        if (i == n.size()) {
-            a.push_back(p);
-            return;
-        }
-        
-        p.push_back(n[i]);
-        give(a, n, p, i + 1);
-     
-        p.pop_back();
-        give(a, n, p, i + 1);
+void give(int i,vector<vector<int>>&a,vector<int>&p,vector<int>&n){
+    if(i==n.size()){
+        a.push_back(p);
+        return ;
     }
-    
+    p.push_back(n[i]);
+    give(i+1,a,p,n);
+    p.pop_back();
+      give(i+1,a,p,n);
+}
     vector<vector<int>> subsets(vector<int>& n) {
-        vector<vector<int>> a;
-        vector<int> p;
-        give(a, n, p, 0);
+        vector<vector<int>>a;
+        vector<int>p;
+        give(0,a,p,n);
         return a;
     }
 };
