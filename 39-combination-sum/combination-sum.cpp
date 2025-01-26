@@ -1,27 +1,23 @@
-
 class Solution {
 public:
-    void give(vector<int>& c, int t, int s, int i, vector<int>& p, vector<vector<int>>& a) {
-        if (s > t) return;  // If the sum exceeds the target, return
-        if (s == t) {       // If the sum equals the target, add the combination to results
-            a.push_back(p);
+    void give(set<vector<int>>& a, vector<int>& c, int t, int s, int i, vector<int>& pa) {
+        if (s > t || i == c.size()) {
             return;
         }
-        if (i == c.size()) return;  // If index reaches the end, return
-
-        // Include the current element and recurse
-        p.push_back(c[i]);
-        give(c, t, s + c[i], i, p, a);
-        p.pop_back();  // Backtrack and remove the element
-
-        // Exclude the current element and recurse
-        give(c, t, s, i + 1, p, a);
+        if (s == t) {
+            a.insert(pa);
+            return; // Ensure no further recursion occurs after finding a valid combination
+        }
+        pa.push_back(c[i]);
+        give(a, c, t, s + c[i], i, pa); // Include the current element
+        pa.pop_back();
+        give(a, c, t, s, i + 1, pa); // Move to the next element
     }
 
     vector<vector<int>> combinationSum(vector<int>& c, int t) {
-        vector<vector<int>> result;
-        vector<int> currentCombination;
-        give(c, t, 0, 0, currentCombination, result);
-        return result;
+        set<vector<int>> a;
+        vector<int> pa;
+        give(a, c, t, 0, 0, pa);
+        return vector<vector<int>>(a.begin(), a.end()); // Construct vector directly from the set
     }
 };
