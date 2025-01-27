@@ -1,42 +1,33 @@
 class Solution {
 public:
-    bool isBoundary(int i, int j, int rows, int cols) {
-        return i == 0 || i == rows - 1 || j == 0 || j == cols - 1;
+    void dfs(int i, int j, vector<vector<int>>& g, vector<vector<int>>& v) {
+        if (i < 0 || i >= g.size() || j < 0 || j >= g[0].size() || g[i][j] == 0 || v[i][j] == 1) return;
+        v[i][j] = 1; // Mark the cell as visited
+        dfs(i + 1, j, g, v);
+        dfs(i - 1, j, g, v);
+        dfs(i, j - 1, g, v);
+        dfs(i, j + 1, g, v);
     }
 
-    void dfs(vector<vector<int>>& v, const vector<vector<int>>& b, int i, int j, int n, int m) {
-        if (i < 0 || i >= n || j < 0 || j >= m || v[i][j] != 0 || b[i][j] == 0) {
-            return;
+    int numEnclaves(vector<vector<int>>& g) {
+        int c = 0;
+        vector<vector<int>> v(g.size(), vector<int>(g[0].size(), 0));
+
+        // Mark all boundary-connected land cells
+        for (int i = 0; i < g[0].size(); i++) {
+            if (g[0][i] == 1 && v[0][i] == 0) dfs(0, i, g, v);
+            if (g[g.size() - 1][i] == 1 && v[g.size() - 1][i] == 0) dfs(g.size() - 1, i, g, v);
         }
-        v[i][j] = -1;
-        dfs(v, b, i + 1, j, n, m);
-        dfs(v, b, i, j - 1, n, m);
-        dfs(v, b, i - 1, j, n, m);
-        dfs(v, b, i, j + 1, n, m);
-    }
+        for (int i = 0; i < g.size(); i++) {
+            if (g[i][0] == 1 && v[i][0] == 0) dfs(i, 0, g, v);
+            if (g[i][g[0].size() - 1] == 1 && v[i][g[0].size() - 1] == 0) dfs(i, g[0].size() - 1, g, v);
+        }
 
-    int numEnclaves(vector<vector<int>>& b) {
-        int n = b.size();
-        if (n == 0) return 0;
-        int m = b[0].size();
-        vector<vector<int>> v(n, vector<int>(m, 0));
-
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < m; j++) {
-                if (b[i][j] == 1 && isBoundary(i, j, n, m)) {
-                    dfs(v, b, i, j, n, m);
-                }
+        for (int i = 0; i < g.size(); i++) {
+            for (int j = 0; j < g[0].size(); j++) {
+                if (g[i][j] == 1 && v[i][j] == 0) c++;
             }
         }
-
-        int cnt = 0;
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < m; j++) {
-                if (b[i][j] == 1 && v[i][j] != -1) {
-                    cnt++;
-                }
-            }
-        }
-        return cnt;
+        return c;
     }
 };
